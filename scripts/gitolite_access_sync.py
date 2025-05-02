@@ -1,10 +1,35 @@
 #!/usr/bin/env python3
-# ------------------------
-# -- Created by: Alireza Kayvan
-# -- Date: 2017-Dec-10
-# -- Version: 0.1
-# ------------------------
+"""
+Gitolite Access Sync Script
+---------------------------
 
+Author: Alireza Kayvan
+Date: 2017-12-10
+Version: 0.1
+
+Description:
+This Python script is designed to automate the update of Gitolite access control 
+based on user permissions stored in a relational database.
+
+Workflow:
+- Reads repository and permission data from a MySQL database
+- Dynamically generates the Gitolite access control configuration (`conf/user_permissions.conf`)
+- Commits and pushes the updated configuration to the Gitolite admin repository
+- Ensures that repository-level and directory-level permissions are correctly applied
+
+Use Case:
+This script is typically scheduled via cron and complements a web-based admin panel 
+(also part of this project) where access rules are managed via a UI and stored in the database.
+
+Requirements:
+- Python 3.x
+- MySQLdb
+- Gitolite admin repo with appropriate file structure
+
+Execution:
+Run periodically via crontab to keep Gitolite permissions in sync with DB entries.
+
+"""
 import os
 import filecmp
 import time
