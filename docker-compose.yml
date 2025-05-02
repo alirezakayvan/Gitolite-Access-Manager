@@ -1,0 +1,48 @@
+version: '3.8'
+
+services:
+  app:
+    build: ./backend
+    container_name: laravel-app
+    volumes:
+      - ./backend:/var/www
+    ports:
+      - "9000:9000"
+    depends_on:
+      - db
+
+  frontend:
+    build: ./frontend
+    container_name: react-ui
+    working_dir: /app
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./frontend:/app
+
+  nginx:
+    image: nginx:alpine
+    container_name: nginx
+    ports:
+      - "80:80"
+    volumes:
+      - ./backend:/var/www
+      - ./backend/.docker/nginx.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - app
+      - frontend
+
+  db:
+    image: mysql:8
+    container_name: mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: gitolite
+      MYSQL_ROOT_PASSWORD: root
+    ports:
+      - "3306:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+
+volumes:
+  db_data:
